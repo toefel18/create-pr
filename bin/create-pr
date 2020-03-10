@@ -1,2 +1,11 @@
 #!/usr/bin/env bash
-git rev-parse --abbrev-ref HEAD
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+echo "you are currently on $CURRENT_BRANCH"
+
+if [ $CURRENT_BRANCH == "master" ]
+then
+
+    NEW_BRANCH_NAME="create-pr-$RANDOM"
+    echo "creating a new branch $NEW_BRANCH_NAME"
+fi
