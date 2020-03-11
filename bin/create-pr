@@ -1,11 +1,34 @@
 #!/usr/bin/env bash
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+COMMENT=$@
 
 echo "you are currently on $CURRENT_BRANCH"
 
+if [ -z "$COMMENT" ]
+then
+      echo "no message provided, defaulting to 'quick-pr' "
+      COMMENT="quick-pr"
+else
+      echo "using message $COMMENT"
+fi
+
 if [ $CURRENT_BRANCH == "master" ]
 then
-
-    NEW_BRANCH_NAME="create-pr-$RANDOM"
+    NEW_BRANCH_NAME="create-pr-$RANDOM-$RANDOM"
     echo "creating a new branch $NEW_BRANCH_NAME"
+    git checkout -b $NEW_BRANCH_NAME
+
+    echo "Committing staged files with message $COMMENT"
+    git commit -m "$COMMENT"
+    CREATE_PR_OUTPUT=$(gh pr create -B master -b "$COMMENT" -t "$COMMENT")
+
+    PR_NUM_REGEX='.*/([0-9]+)$'
+    if [[ $CREATE_PR_OUTPUT =~ $PR_NUM_REGEX ]]
+    then
+        PR_NUM="${BASH_REMATCH[1]}"
+        echo "created PR $PR_NUM, opening browser"
+        gh pr view $PR_NUM
+    else
+        echo "could not extract created PR"
+    fi
 fi
