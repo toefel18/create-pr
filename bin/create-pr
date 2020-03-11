@@ -15,20 +15,22 @@ fi
 if [ $CURRENT_BRANCH == "master" ]
 then
     NEW_BRANCH_NAME="create-pr-$RANDOM-$RANDOM"
-    echo "creating a new branch $NEW_BRANCH_NAME"
+    echo "on master, creating a new branch $NEW_BRANCH_NAME"
     git checkout -b $NEW_BRANCH_NAME
+else
+    echo "not on master, so not creating a new branch"
+fi
 
-    echo "Committing staged files with message $COMMENT"
-    git commit -m "$COMMENT"
-    CREATE_PR_OUTPUT=$(gh pr create -B master -b "$COMMENT" -t "$COMMENT")
+echo "Committing staged files with message $COMMENT"
+git commit -m "$COMMENT"
+CREATE_PR_OUTPUT=$(gh pr create -B master -b "$COMMENT" -t "$COMMENT")
 
-    PR_NUM_REGEX='.*/([0-9]+)$'
-    if [[ $CREATE_PR_OUTPUT =~ $PR_NUM_REGEX ]]
-    then
-        PR_NUM="${BASH_REMATCH[1]}"
-        echo "created PR $PR_NUM, opening browser"
-        gh pr view $PR_NUM
-    else
-        echo "could not extract created PR"
-    fi
+PR_NUM_REGEX='.*/([0-9]+)$'
+if [[ $CREATE_PR_OUTPUT =~ $PR_NUM_REGEX ]]
+then
+    PR_NUM="${BASH_REMATCH[1]}"
+    echo "created PR $PR_NUM, opening browser"
+    gh pr view $PR_NUM
+else
+    echo "could not extract created PR"
 fi
