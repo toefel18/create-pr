@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-COMMENT=$@
+COMMENT=$*
 
 echo "you are currently on $CURRENT_BRANCH"
 
@@ -12,7 +12,7 @@ else
       echo "using message $COMMENT"
 fi
 
-if [ $CURRENT_BRANCH == "master" ]
+if [ "$CURRENT_BRANCH" == "master" ]
 then
     NEW_BRANCH_NAME="create-pr-$RANDOM-$RANDOM"
     echo "on master, creating a new branch $NEW_BRANCH_NAME"
@@ -30,7 +30,7 @@ if [[ $CREATE_PR_OUTPUT =~ $PR_NUM_REGEX ]]
 then
     PR_NUM="${BASH_REMATCH[1]}"
     echo "created PR $PR_NUM, opening browser"
-    gh pr view $PR_NUM
+    gh pr view "$PR_NUM"
 else
     echo "could not extract created PR"
 fi
