@@ -1,16 +1,43 @@
 #!/usr/bin/env bash
+
+function usage() {
+  echo "Quickly create a PR from the current staging area in Github."
+  echo "  If the current branch is master, a new branch will be created for the PR."
+  echo "  If the current branch is not master, the PR will merge the current branch to master."
+  echo ""
+  echo "Options:"
+  echo "-a         add all files to the PR instead of the files added to the staging area"
+  echo "-m [msg]   provide a commit and PR message, default: quick pr"
+  echo "-s         switch back to master after creating the PR."
+  echo ""
+  echo "Example:"
+  echo "create-pr -as -m \"Some small changes the the README\""
+}
+
+if [ "$*" == "--help" ] || [ "$*" = "-h" ]
+then
+  usage
+  exit
+fi
+
+COMMIT_ALL_FILES=false
+MESSAGE="quick pr"
+SWITCH_TO_MASTER=false
+
+while getopts asm: option
+do
+case "${option}"
+in
+a) COMMIT_ALL_FILES=true;;
+m) MESSAGE=${OPTARG};;
+s) SWITCH_TO_MASTER=true;;
+*) usage; exit 0;;
+esac
+done
+
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-COMMENT=$*
 
 echo "you are currently on $CURRENT_BRANCH"
-
-if [ -z "$COMMENT" ]
-then
-      echo "no message provided, defaulting to 'quick-pr' "
-      COMMENT="quick-pr"
-else
-      echo "using message $COMMENT"
-fi
 
 if [ "$CURRENT_BRANCH" == "master" ]
 then
@@ -21,16 +48,37 @@ else
     echo "not on master, so not creating a new branch"
 fi
 
-echo "Committing staged files with message $COMMENT"
-git commit -m "$COMMENT"
-CREATE_PR_OUTPUT=$(gh pr create -B master -b "$COMMENT" -t "$COMMENT")
+if [ "$COMMIT_ALL_FILES" = "true" ]
+then
+  echo "Committing all files with message $MESSAGE"
+  git add --all
+else
+  echo "Committing only staged files with message $MESSAGE"
+fi
 
+git commit -m "$MESSAGE"
+
+CREATE_PR_OUTPUT=$(gh pr create -B master -b "$MESSAGE" -t "$MESSAGE")
 PR_NUM_REGEX='.*/([0-9]+)$'
+
 if [[ $CREATE_PR_OUTPUT =~ $PR_NUM_REGEX ]]
 then
     PR_NUM="${BASH_REMATCH[1]}"
     echo "created PR $PR_NUM, opening browser"
     gh pr view "$PR_NUM"
+
+
+    if [ "$SWITCH_TO_MASTER" = "true" ]
+    then
+      CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+      echo "Switching back to master"
+      echo "To checkout the branch from which the PR was made, use:"
+      echo ""
+      echo "   git checkout $CURRENT_BRANCH"
+
+      git co master
+    fi
 else
     echo "could not extract created PR"
 fi
