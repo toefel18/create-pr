@@ -21,42 +21,57 @@ $ git st
   	modified:   build.gradle
 ```
 
-At this point, you can simply run `create-pr` to create a PR for README.md, it will use commit message `quick pr`.
-
-You can optionally provide a commit message, for example `create-pr LOY-S964 updated versions`
+At this point, you can simply run `create-pr` to create a PR for README.md.
+You can optionally provide a commit message, for example `create-pr -m "TICKET-S964 updated versions"` or it will 
+default to `quick pr`.
 
 ```bash
-$ create-pr LOY-S126 updated versions
+$ create-pr -asm "Quickly creating a PR for a small change"
+
   you are currently on master
-  using message LOY-S126 updated versions
-  on master, creating a new branch create-pr-6083-15408
-  M	README.MD
-  M	build.gradle
-  Switched to a new branch 'create-pr-6083-15408'
-  Committing staged files with message LOY-S126 updated versions
-  [create-pr-6083-15408 b597820] LOY-S126 updated versions
-   1 file changed, 2 insertions(+)
-  Warning: 1 uncommitted change
+  on master, creating a new branch create-pr-12508-24989
+  M	README.md
+  Switched to a new branch 'create-pr-12508-24989'
+  Committing all files with message Quickly creating a PR for a small change
+  [create-pr-12508-24989 89da3d3] Quickly creating a PR for a small change
+   2 files changed, 119 insertions(+), 1 deletion(-)
+   create mode 100644 unstaged-file.txt
   Counting objects: 3, done.
-  Delta compression using up to 8 threads.
+  Delta compression using up to 12 threads.
   Compressing objects: 100% (3/3), done.
-  Writing objects: 100% (3/3), 309 bytes | 309.00 KiB/s, done.
+  Writing objects: 100% (3/3), 361 bytes | 361.00 KiB/s, done.
   Total 3 (delta 2), reused 0 (delta 0)
   remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
   remote: 
-  remote: Create a pull request for 'create-pr-6083-15408' on GitHub by visiting:
-  remote:      https://github.com/intergamma/loyaltypointmicroservice/pull/new/create-pr-6083-15408
+  remote: Create a pull request for 'create-pr-12508-24989' on GitHub by visiting:
+  remote:      https://github.com/toefel18/kotlin-exposed-blog/pull/new/create-pr-12508-24989
   remote: 
-  To github.com:intergamma/loyaltypointmicroservice.git
-   * [new branch]      HEAD -> create-pr-6083-15408
+  To github.com:toefel18/kotlin-exposed-blog.git
+   * [new branch]      HEAD -> create-pr-12508-24989
   
-  Creating pull request for create-pr-6083-15408 into master in intergamma/loyaltypointmicroservice
+  Creating pull request for create-pr-12508-24989 into master in toefel18/kotlin-exposed-blog
   
-  created PR 80, opening browser
-  Opening https://github.com/intergamma/loyaltypointmicroservice/pull/80 in your browser.
+  created PR 68, opening browser
+  Opening https://github.com/toefel18/kotlin-exposed-blog/pull/68 in your browser.
+  Switching back to master
+  To checkout the branch from which the PR was made, use:
+  
+     git checkout create-pr-12508-24989
+  
+  Switched to branch 'master'
+  Your branch is up to date with 'origin/master'.
+
 ```
 
 The PR will be created and your browser will be opened automatically!
+
+![github](github.png)
+
+#### Supported options:
+
+ * `-a` adds all changes, including new files, to the staging area before creating the PR
+ * `-s` switches back to master after the PR is created, so you can start with a clean slate for next small change
+ * `-m` provides a commit message, that message will also be in the PR body in github 
 
 # Installation
 

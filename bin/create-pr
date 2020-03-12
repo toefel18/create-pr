@@ -76,6 +76,7 @@ then
       echo "To checkout the branch from which the PR was made, use:"
       echo ""
       echo "   git checkout $CURRENT_BRANCH"
+      echo ""
 
       git co master
     fi
