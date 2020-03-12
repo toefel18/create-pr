@@ -65,7 +65,7 @@ $ create-pr -asm "Quickly creating a PR for a small change"
 
 The PR will be created and your browser will be opened automatically!
 
-![github](github.png)
+<img src="github.png" alt="github" width="550"/>
 
 #### Supported options:
 
