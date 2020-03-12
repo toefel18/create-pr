@@ -67,8 +67,16 @@ then
     echo "created PR $PR_NUM, opening browser"
     gh pr view "$PR_NUM"
 
+
     if [ "$SWITCH_TO_MASTER" = "true" ]
     then
+      CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+      echo "Switching back to master"
+      echo "To checkout the branch from which the PR was made, use:"
+      echo ""
+      echo "   git checkout $CURRENT_BRANCH"
+
       git co master
     fi
 else
