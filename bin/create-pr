@@ -58,6 +58,7 @@ fi
 
 git commit -m "$MESSAGE"
 
+git push -u origin "$(git branch --show-current)"
 CREATE_PR_OUTPUT=$(gh pr create -B master -b "$MESSAGE" -t "$MESSAGE")
 PR_NUM_REGEX='.*/([0-9]+)$'
 
